@@ -10,6 +10,8 @@ import id.hikari.core.exception.CustomException;
 import id.hikari.core.model.User;
 import id.hikari.core.repository.UserRepository;
 import id.hikari.core.security.JwtTokenProvider;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,11 +48,12 @@ public class UserService {
         }
     }
 
-    public String signup(User user) {
+    public TokenResponseDTO signup(User user) {
         if (!userRepository.existsByUsername(user.getUsername())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
-            return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+            String token = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+            return new TokenResponseDTO(token,"200","succes signup");
         } else {
             throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
         }

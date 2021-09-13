@@ -6,6 +6,7 @@
 package id.hikari.core.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  *
@@ -16,12 +17,22 @@ public class TokenResponseDTO implements Serializable {
     private String token;
     private String code;
     private String message;
+    private Date validity;
 
     public TokenResponseDTO(String token, String code, String message) {
         this.token = token;
         this.code = code;
         this.message = message;
     }
+
+    public Date getValidity() {
+        return validity;
+    }
+
+    public void setValidity(Date validity) {
+        this.validity = validity;
+    }
+    
 
     public TokenResponseDTO() {
     }

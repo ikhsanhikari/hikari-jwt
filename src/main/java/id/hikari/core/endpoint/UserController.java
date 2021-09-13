@@ -63,17 +63,17 @@ public class UserController {
       @ApiResponse(code = 422, message = "Username is already in use")
         , //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public String signup(@ApiParam("Signup User") @RequestBody UserDataDTO user) {
+    public ResponseEntity signup(@ApiParam("Signup User") @RequestBody UserDataDTO user) {
         User userModel = new User();
         userModel.setUsername(user.getUsername());
         userModel.setEmail(user.getEmail());
         userModel.setPassword(user.getPassword());
         userModel.setRoles(user.getRoles());
-        return userService.signup(userModel);
+        return ResponseEntity.ok(userService.signup(userModel));
     }
 
     @DeleteMapping(value = "/{username}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "${UserController.delete}")
     @ApiResponses(value = {//
 
@@ -90,7 +90,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/{username}")
-    @PreAuthorize("hasRole('ROLE_OWNER')")
+//    @PreAuthorize("hasRole('ROLE_OWNER')")
     @ApiOperation(value = "${UserController.search}", response = UserResponseDTO.class)
     @ApiResponses(value = {//
 
@@ -106,7 +106,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/me")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @ApiOperation(value = "${UserController.me}", response = UserResponseDTO.class)
     @ApiResponses(value = {//
 
@@ -118,9 +118,9 @@ public class UserController {
     public User whoami(HttpServletRequest req) {
         return userService.whoami(req);
     }
-
+ 
     @GetMapping("/refresh")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     public String refresh(HttpServletRequest req) {
         return userService.refresh(req.getRemoteUser());
     }
