@@ -10,8 +10,6 @@ import id.hikari.core.exception.CustomException;
 import id.hikari.core.model.User;
 import id.hikari.core.repository.UserRepository;
 import id.hikari.core.security.JwtTokenProvider;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;

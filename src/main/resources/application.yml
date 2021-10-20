@@ -1,5 +1,9 @@
 
 spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
   datasource:
     url: jdbc:mysql://localhost:3306/hikari-jwt?useSSL=false
     username: root
@@ -26,7 +30,7 @@ security:
   jwt:
     token:
       secret-key: secret-key
-      expire-length: 300000 # 5 minutes duration by default: 5 minutes * 60 seconds * 1000 miliseconds
+      expire-length: 3000000 # 5 minutes duration by default: 5 minutes * 60 seconds * 1000 miliseconds
       
 UserController:
   signin: Authenticates user and returns its JWT token.
