@@ -1,11 +1,13 @@
 package id.hikari.core.config;
 
+import java.util.Optional;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-import java.util.Optional;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 //spring annotation
 @Configuration
@@ -18,7 +20,20 @@ public class BeanConfig {
     //this is some kind of user mostly.
     @Bean
     public AuditorAware<String> aware() {
-        return () -> Optional.of("Administrator");
+        return new AuditorAware<String>() {
+            @Override
+            public Optional<String> getCurrentAuditor() {
+                if (SecurityContextHolder.getContext().getAuthentication() != null) {
+                    UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                            .getPrincipal();
+                    String username = userDetails.getUsername();
+                    return Optional.of(username);
+                } else {
+                    return Optional.of("No Name");
+                }
+            }
+
+        };
     }
 
 //    @Bean

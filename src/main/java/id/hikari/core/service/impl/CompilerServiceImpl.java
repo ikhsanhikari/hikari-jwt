@@ -39,7 +39,7 @@ public class CompilerServiceImpl implements CompilerService {
         GeneralUtil.replaceRandomAll(sb);
 
         crdto.setCode(sb.toString());
-        System.out.println(crdto.getCode());
+//        System.out.println(crdto.getCode());
 
         generateJavaFile(crdto, filename);
         String output = execCMD(filename);
@@ -66,8 +66,8 @@ public class CompilerServiceImpl implements CompilerService {
             if (line == null) {
                 break;
             }
-            System.out.println(line);
-            output += line + "\n";
+//            System.out.println(line);
+            output += line;
         }
         return output;
     }

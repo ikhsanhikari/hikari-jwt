@@ -51,6 +51,9 @@ public class WebSecutiryConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/create-pattern").permitAll()
                 .antMatchers("/list-pattern").permitAll()
                 .antMatchers("/generate-pattern").permitAll()
+                .antMatchers("/exercise").permitAll()
+                .antMatchers("/help").permitAll()
+                .antMatchers("/general-setting").permitAll()
                 
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest().authenticated()

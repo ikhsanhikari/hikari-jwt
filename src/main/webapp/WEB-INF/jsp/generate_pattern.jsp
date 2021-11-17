@@ -13,6 +13,8 @@
         <link href="resources/css/font-awesome.css" rel="stylesheet">
         <link href="resources/css/style.css" rel="stylesheet">
         <link href="resources/css/pages/dashboard.css" rel="stylesheet">
+        <link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/styles/github.min.css' rel="stylesheet"/>
+        <script src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/highlight.min.js'></script>
     </head>
     <body>
         <jsp:include page="common/navbar.jsp"/>
@@ -74,7 +76,7 @@
                                                             <th> No </th>
                                                             <th> Course Type</th>
                                                             <th> Course Level</th>
-                                                            <th class="td-actions">Action </th>
+                                                            <th class="td-actions">Action <input type="checkbox" class="btn btn-primary " id="checkAll" /></th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="listPatternTable">
@@ -92,11 +94,10 @@
                                                 <h3>Pattern that chosen</h3>
                                             </div>
                                             <div class="widget-content">
-                                                <button type="button" class="btn btn-primary" onclick="generateQuestion()" id="generateQuestion">Generate</button>
-                                                <button type="button" class="btn btn-danger" href="#previewModal" data-toggle="modal" onclick="preview()" id="btnPreview" style="visibility: hidden"  id="generateQuestion">Preview</button>
+                                                <button type="button" class="btn btn-primary " onclick="generateQuestion()" id="generateQuestion">Generate</button>
+                                                <button type="button" class="btn btn-danger" href="#previewModal" data-toggle="modal" onclick="preview()" id="btnPreview" style="visibility: hidden"  >Preview</button>
                                                 <br/><br/>
-                                                <div id="result">
-                                                </div>
+                                                <div id="result"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -125,7 +126,7 @@
                 <pre id="answerCode"></pre>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info"  aria-hidden="true" onclick="download()">Download</button>
+                <button class="btn btn-info"  aria-hidden="true" onclick="generatePDF()">Download</button>
                 <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">Close</button>
             </div>
         </div>
@@ -145,164 +146,221 @@
 
         <script>
 
-                                                    listPattern();
-                                                    function listPattern() {
-                                                        var level = $('#courseLevel').val();
-                                                        var type = $('#courseType').val();
-                                                        $.ajax({
-                                                            url: 'pattern/findByCourse?level=' + level + '&type=' + type,
-                                                            type: 'GET',
-                                                            headers: {
-                                                                'Content-type': 'application/json',
-                                                                'Authorization': 'Bearer ' + localStorage.getItem('token')
-                                                            },
-                                                            success: function (data) {
-                                                                var listPattern = data.data;
-                                                                var content = '';
-                                                                var modal = '';
-                                                                listPattern.forEach(function (item, index) {
-                                                                    var desc = `Pattern` + item.id + `_` + item.courseLevel + `_` + item.courseType;
-                                                                    content += `<tr>
+                    listPattern();
+                    function listPattern() {
+                        var level = $('#courseLevel').val();
+                        var type = $('#courseType').val();
+                        $.ajax({
+                            url: 'pattern/findByCourse?level=' + level + '&type=' + type,
+                            type: 'GET',
+                            headers: {
+                                'Content-type': 'application/json',
+                                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                            },
+                            success: function (data) {
+                                var listPattern = data.data;
+                                var content = '';
+                                var modal = '';
+                                listPattern.forEach(function (item, index) {
+                                    var desc = `Pattern` + item.id + `_` + item.courseLevel + `_` + item.courseType;
+                                    content += `<tr>
                                                     <td> ` + (index + 1) + ` </td>
                                                     <td> ` + item.courseType + ` </td>
                                                     <td> ` + item.courseLevel + ` </td>
                                                     <td class="td-actions">
-                                                        <a href="#patternModal` + index + `" data-toggle="modal" class="btn btn-default btn-small"><i class="btn-icon-only icon-eye-open"> </i></a>
+                                                        <a href="#patternModal` + index + `" data-toggle="modal" class="btn btn-primary btn-small"><i class="btn-icon-only icon-eye-open"> </i></a>
                                                         
-                                                            <input type="checkbox" value="` + item.pattern + `" name ="` + item.id + `" onchange="changeCheckBox()">
+                                                            <input type="checkbox" value='` + item.pattern + `' name ="` + item.id + `" onchange="changeCheckBox()">
                                                         
                                                     </td>
                                                 </tr>`;
 
 
-                                                                    modal += `<div id="patternModal` + index + `" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="patternModalLabel" aria-hidden="true">
+                                    modal += `<div id="patternModal` + index + `" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="patternModalLabel" aria-hidden="true">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
                                             <h3 id="patternModalLabel">` + desc + `</h3>
                                         </div>
                                         <div class="modal-body">
-                                            <pre>` + item.pattern + `</pre>
+                                            <pre><code class='java'>` + item.pattern + `</code></pre>
                                         </div>
                                         <div class="modal-footer">
                                             <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
                                         </div>
                                     </div>`;
-                                                                })
-                                                                $('#listPatternTable').html(content);
-                                                                $('#listModal').html(modal);
-                                                            }
-                                                        });
-                                                    }
-                                                    function reset() {
-                                                        $('#courseType').val('');
-                                                        $('#courseLevel').val('');
-                                                        listPattern();
-                                                    }
-                                                    function addToList(obj) {
-                                                        $(obj).removeClass('btn btn-default');
-                                                        $(obj).addClass('btn btn-primary');
-                                                    }
-                                                    var sel = []
-                                                    function changeCheckBox() {
-                                                        var selected = [];
-                                                        var pattern = [];
-                                                        $('#listPatternTable input:checked').each(function () {
-                                                            selected.push($(this).attr('name'));
-                                                            pattern.push($(this).attr('value'));
-                                                        });
-                                                        var content = '';
-                                                        pattern.forEach(function (item) {
-                                                            content += '<pre>' + item + '</pre></br>';
-                                                        })
-                                                        sel = selected;
-                                                        $('#result').html(content);
-                                                    }
-                                                    var generateId = '';
-                                                    function generateQuestion() {
-                                                        $('#generateQuestion').html('Generate...')
-                                                        req = {
-                                                            id: []
-                                                        }
-                                                        req.id = sel;
-                                                        if (sel.length > 0) {
-                                                            $.ajax({
-                                                                url: 'pattern/findAllById',
-                                                                type: 'POST',
-                                                                data: JSON.stringify(req),
-                                                                headers: {
-                                                                    'Content-type': 'application/json',
-                                                                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                                                                },
-                                                                success: function (data) {
-                                                                    generateId = data.data;
-                                                                    $('#generateQuestion').html('Generate')
-                                                                    $('#btnPreview').css('visibility', 'visible');
-                                                                },
-                                                                error: function () {
-                                                                    $('#generateQuestion').html('Generate')
-                                                                }
-                                                            })
-                                                        } else {
-                                                            $('#generateQuestion').html('Generate')
-                                                            Toast.fire({
-                                                                icon: 'error',
-                                                                title: 'Choose one pattern or more !'
-                                                            })
-                                                        }
+                                })
+                                $('#listPatternTable').html(content);
+                                $('#listModal').html(modal);
+                            }
+                        });
+                    }
+                    function reset() {
+                        $('#courseType').val('');
+                        $('#courseLevel').val('');
+                        $('#courseLevel').val('');
+                        $('#result').html('');
+                        $('#btnPreview').css('visibility', 'hidden');
+                        listPattern();
+                    }
+                    function addToList(obj) {
+                        $(obj).removeClass('btn btn-default');
+                        $(obj).addClass('btn btn-primary');
+                    }
+                    var sel = []
+                    function changeCheckBox() {
+                        var selected = [];
+                        var pattern = [];
+                        $('#listPatternTable input:checked').each(function () {
+                            selected.push($(this).attr('name'));
+                            pattern.push($(this).attr('value'));
+                        });
+                        var content = '';
+                        pattern.forEach(function (item) {
+                            content += '<pre><code class="java">' + item + '</code></pre></br>';
+                        })
+                        sel = selected;
+                        $('#result').html(content);
 
-                                                    }
-                                                    function preview() {
-                                                        $.ajax({
-                                                            url: 'bank/findByGenerateId?generateId=' + generateId,
-                                                            type: 'GET',
-                                                            headers: {
-                                                                'Content-type': 'application/json',
-                                                                'Authorization': 'Bearer ' + localStorage.getItem('token')
-                                                            },
-                                                            success: function (data) {
-                                                                content = '';
-                                                                answer = '';
-                                                                data.data.forEach(function (item) {
-                                                                    answer += '<b>' + item.id + ' : ' + item.answer + ' </b><br>';
-                                                                    content += '<pre><b>' + (item.id) + '.</b></br>' + item.pattern + '</pre><br/>';
-                                                                })
-                                                                $('#answerCode').html(answer);
-                                                                $('#previewCode').html(content);
-                                                                $('#previewModalLabel').html('Generate ID:' + generateId);
-                                                            },
-                                                            error: function () {
-//                                                                $('#generateQuestion').html('Generate');
-                                                            }
-                                                        })
-                                                    }
-                                                    const Toast = Swal.mixin({
-                                                        toast: true,
-                                                        position: 'top-end',
-                                                        showConfirmButton: false,
-                                                        timer: 3000,
-                                                        timerProgressBar: true,
-                                                        didOpen: (toast) => {
-                                                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                                                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                                                        }
-                                                    })
+                        hljs.initHighlighting.called = false;
+                        hljs.initHighlighting();
+                    }
 
-                                                    function download() {
-                                                        $.ajax({
-                                                            url: 'pdf?output=' + generateId+'.pdf&generateId='+generateId,
-                                                            type: 'GET',
-                                                            headers: {
-                                                                'Content-type': 'application/json',
-                                                                'Authorization': 'Bearer ' + localStorage.getItem('token')
-                                                            },
-                                                            success: function (data) {
-                                                                alert('berhasil');
-                                                            },
-                                                            error: function () {
-                                                            }
-                                                        })
-                                                    }
+                    function loadingButton(id, isActive) {
+                        if (isActive) {
+                            $('#' + id).addClass('loading');
+                        } else {
+                            $('#' + id).removeClass('loading');
+                        }
 
+                        $('#' + id).attr('disabled', isActive);
+                    }
+                    var generateId = '';
+                    function generateQuestion() {
+                        loadingButton('generateQuestion', true);
+                        req = {
+                            id: []
+                        }
+                        req.id = sel;
+                        if (sel.length > 0) {
+                            $.ajax({
+                                url: 'pattern/findAllById',
+                                type: 'POST',
+                                data: JSON.stringify(req),
+                                headers: {
+                                    'Content-type': 'application/json',
+                                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                },
+                                success: function (data) {
+                                    generateId = data.data;
+                                    loadingButton('generateQuestion', false);
+                                    $('#btnPreview').css('visibility', 'visible');
+                                },
+                                error: function () {
+                                    loadingButton('generateQuestion', false);
+                                }
+                            })
+                        } else {
+                            loadingButton('generateQuestion', false);
+                            Toast.fire({
+                                icon: 'error',
+                                title: 'Choose one pattern or more !'
+                            })
+                        }
+
+                    }
+                    function preview() {
+                        $.ajax({
+                            url: 'bank/findByGenerateId?generateId=' + generateId,
+                            type: 'GET',
+                            headers: {
+                                'Content-type': 'application/json',
+                                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                            },
+                            success: function (data) {
+                                content = '';
+                                answer = '';
+                                data.data.forEach(function (item) {
+                                    answer += '<b>' + item.id + ' : ' + item.answer + ' </b><br>';
+                                    content += '<b>' + (item.id) + '.</b></br>';
+                                    content += '<pre><code class="java"></br>' + item.pattern + '</code></pre><br/>';
+                                })
+                                $('#answerCode').html(answer);
+                                $('#previewCode').html(content);
+                                $('#previewModalLabel').html('Generate ID:' + generateId);
+                                hljs.initHighlighting.called = false;
+                                hljs.initHighlighting();
+                            },
+                            error: function () {
+                            }
+                        })
+                    }
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                    function generatePDF() {
+                        $.ajax({
+                            url: 'pdf?output=' + generateId + '.pdf&generateId=' + generateId,
+                            type: 'GET',
+                            headers: {
+                                'Content-type': 'application/json',
+                                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                            },
+                            success: function (data) {
+                                downloadPDF();
+                            },
+                            error: function () {
+                            }
+                        })
+                    }
+                    function downloadPDF() {
+                        $.ajax({
+                            url: 'download?output=' + generateId + '.pdf',
+                            type: 'GET',
+                            headers: {
+                                'Content-type': 'application/json',
+                                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                            },
+                            success: function (data) {
+                            },
+                            error: function () {
+                            }
+                        })
+                    }
+
+                    function showPattern() {
+                        var selected = [];
+                        var pattern = [];
+                        $('#listPatternTable input:checked').each(function () {
+                            selected.push($(this).attr('name'));
+                            pattern.push($(this).attr('value'));
+                        });
+                        var content = '';
+                        pattern.forEach(function (item) {
+                            content += '<pre><code class="java">' + item + '</code></pre></br>';
+                        })
+                        sel = selected;
+                        $('#result').html(content);
+
+                        hljs.initHighlighting.called = false;
+                        hljs.initHighlighting();
+                    }
+
+
+                    $(document).ready(function () {
+                        $('#checkAll').change(function () {
+                            $("input:checkbox").prop('checked', $(this).prop("checked"));
+                            showPattern();
+                        })
+                    })
         </script>
         <style>
             pre {
@@ -319,6 +377,28 @@
                 background: url(lines.png) repeat 0 0;
                 padding: 10px;
                 color: #333;
+            }
+
+            .loading:after {
+                overflow: hidden;
+                display: inline-block;
+                vertical-align: bottom;
+                -webkit-animation: ellipsis steps(4,end) 900ms infinite;      
+                animation: ellipsis steps(4,end) 900ms infinite;
+                content: "\2026"; /* ascii code for the ellipsis character */
+                width: 0px;
+            }
+
+            @keyframes ellipsis {
+                to {
+                    width: 20px;    
+                }
+            }
+
+            @-webkit-keyframes ellipsis {
+                to {
+                    width: 20px;    
+                }
             }
 
         </style>

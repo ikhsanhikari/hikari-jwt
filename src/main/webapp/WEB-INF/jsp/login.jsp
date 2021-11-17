@@ -85,19 +85,43 @@
         function login() {
             var username = $('#username').val();
             var password = $('#password').val();
-            
-            $('#btnLogin').html('Sign In....');
-            
+
+            $('#btnLogin').addClass('loading');
+
             $.post('users/signin?username=' + username + '&password=' + password, function (data) {
                 if (data.code == 200) {
                     localStorage.setItem('token', data.token);
-                    $('#btnLogin').html('Sign In');
+                    $('#btnLogin').removeClass('loading');
                     window.location.href = 'index';
                 }
             }).fail(function () {
-                $('#btnLogin').html('Sign In');
+                $('#btnLogin').removeClass('loading');
                 document.querySelector('#messageError').innerHTML = 'invalid username or password'
             })
         }
     </script>
+    <style>
+        .loading:after {
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: bottom;
+            -webkit-animation: ellipsis steps(4,end) 900ms infinite;      
+            animation: ellipsis steps(4,end) 900ms infinite;
+            content: "\2026"; /* ascii code for the ellipsis character */
+            width: 0px;
+        }
+
+        @keyframes ellipsis {
+            to {
+                width: 20px;    
+            }
+        }
+
+        @-webkit-keyframes ellipsis {
+            to {
+                width: 20px;    
+            }
+        }
+
+    </style>
 </html>

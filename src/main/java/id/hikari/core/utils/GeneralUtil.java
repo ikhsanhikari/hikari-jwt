@@ -12,7 +12,6 @@ import com.itextpdf.text.pdf.PdfWriter;
 import id.hikari.core.constant.StaticValue;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.util.Random;
 
 /**
  *
@@ -68,18 +67,17 @@ public class GeneralUtil {
 
         int count = countOccurrences(sb.toString(), randomType);
         for (int j = 1; j <= count; j++) {
-            Random rand = new Random();
             String to = "";
             if (randomType.equals(":value")) {
-                to = String.valueOf(rand.nextInt(15));
+                to = String.valueOf(StaticValue.getRandomValue(j-1));
             } else if (randomType.equals(":compare")) {
                 to = StaticValue.getComparison();
             } else if (randomType.equals(":operator")) {
                 to = StaticValue.getOperator();
             } else if (randomType.equals(":output")) {
-                to = "\"" + StaticValue.getRandomOutput() + "\"";
+                to = "\"" + StaticValue.getRandomOutput(j-1) + "\"";
             }
-            replaceAll(sb, randomType + j, to);
+            replaceAll(sb, randomType + j+"", to);
         }
     }
 }

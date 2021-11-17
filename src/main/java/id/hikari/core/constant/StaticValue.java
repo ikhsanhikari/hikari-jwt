@@ -5,7 +5,9 @@
  */
 package id.hikari.core.constant;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -45,10 +47,24 @@ public class StaticValue {
         return "System.out.println(\"" + text + "\");";
     }
 
-    public static String getRandomOutput() {
+    public static String getRandomOutput(int index) {
         List<String> result = Arrays.asList("Wooz", "Buff!", "Hi!", "Hello ", "Huzzzzzz", "Yosh!");
-        Random rand = new Random();
-        return result.get(rand.nextInt(result.size()));
+        Collections.shuffle(result);
+        if((result.size()-1)<index){
+            return "default";
+        }else{
+            return result.get(index);
+        }
+        
+    }
+    
+    public static Integer getRandomValue(int index) {
+        List<Integer> result = new ArrayList<>();
+        for (int i = 1; i < 30; i++) {
+            result.add(i);
+        }
+        Collections.shuffle(result);
+        return result.get(index);
     }
 
 }

@@ -30,5 +30,5 @@ public interface QuestionService {
 
     ResponseDTO findAllByCourse(CourseLevel level, CourseType type);
 
-    ResponseDTO findAllByID(List<Long> id);
+    ResponseDTO findAllByID(List<Long> id, boolean isExercise);
 }

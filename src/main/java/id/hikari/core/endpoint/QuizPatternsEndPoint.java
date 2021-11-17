@@ -56,6 +56,11 @@ public class QuizPatternsEndPoint {
     
     @PostMapping("/findAllById")
     public ResponseDTO findAllById(@RequestBody QuestionRequestDTO dTO ) {
-        return questionService.findAllByID(dTO.getId());
+        return questionService.findAllByID(dTO.getId(),false);
+    }
+    
+    @PostMapping("/findAllByIdForExercise")
+    public ResponseDTO findAllByIdExercise(@RequestBody QuestionRequestDTO dTO ) {
+        return questionService.findAllByID(dTO.getId(),true);
     }
 }

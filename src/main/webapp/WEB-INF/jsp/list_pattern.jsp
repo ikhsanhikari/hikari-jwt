@@ -13,6 +13,8 @@
         <link href="resources/css/font-awesome.css" rel="stylesheet">
         <link href="resources/css/style.css" rel="stylesheet">
         <link href="resources/css/pages/dashboard.css" rel="stylesheet">
+        <link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/styles/github.min.css' rel="stylesheet"/>
+        <script src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/highlight.min.js'></script>
     </head>
     <body>
         <jsp:include page="common/navbar.jsp"/>
@@ -71,6 +73,7 @@
                                             <thead>
                                                 <tr>
                                                     <th> No </th>
+                                                    <th> Pattern Code</th>
                                                     <th> Course Type</th>
                                                     <th> Course Level</th>
                                                     <th class="td-actions">Action </th>
@@ -106,24 +109,25 @@
         <script src="resources/js/base.js"></script> 
 
         <script>
-            function listPattern() {
-                var level = $('#courseLevel').val();
-                var type = $('#courseType').val();
-                $.ajax({
-                    url: 'pattern/findByCourse?level=' + level + '&type=' + type,
-                    type: 'GET',
-                    headers: {
-                        'Content-type': 'application/json',
-                        'Authorization': 'Bearer ' + localStorage.getItem('token')
-                    },
-                    success: function (data) {
-                        var listPattern = data.data;
-                        var content = '';
-                        var modal = '';
-                        listPattern.forEach(function (item, index) {
-                            var desc = item.id + `,` + item.courseLevel + `,` + item.courseType;
-                            content += `<tr>
+                                        function listPattern() {
+                                            var level = $('#courseLevel').val();
+                                            var type = $('#courseType').val();
+                                            $.ajax({
+                                                url: 'pattern/findByCourse?level=' + level + '&type=' + type,
+                                                type: 'GET',
+                                                headers: {
+                                                    'Content-type': 'application/json',
+                                                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                                                },
+                                                success: function (data) {
+                                                    var listPattern = data.data;
+                                                    var content = '';
+                                                    var modal = '';
+                                                    listPattern.forEach(function (item, index) {
+                                                        var desc = item.id + `,` + item.courseLevel + `,` + item.courseType;
+                                                        content += `<tr>
                                                     <td> ` + (index + 1) + ` </td>
+                                                    <td> ` + item.id + ` </td>
                                                     <td> ` + item.courseType + ` </td>
                                                     <td> ` + item.courseLevel + ` </td>
                                                     <td class="td-actions">
@@ -132,30 +136,32 @@
                                                 </tr>`;
 
 
-                            modal += `<div id="patternModal` + index + `" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="patternModalLabel" aria-hidden="true">
+                                                        modal += `<div id="patternModal` + index + `" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="patternModalLabel" aria-hidden="true">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
                                             <h3 id="patternModalLabel">PATTERN` + desc + `</h3>
                                         </div>
                                         <div class="modal-body">
-                                            <pre>` + item.pattern + `</pre>
+                                            <pre><code class='java'>` + item.pattern + `</code></pre>
                                         </div>
                                         <div class="modal-footer">
                                             <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
                                         </div>
                                     </div>`;
-                        })
-                        $('#listPatternTable').html(content);
-                        $('#listModal').html(modal);
-                    }
-                });
-            }
-            function reset(){
-                $('#courseType').val('');
-                $('#courseLevel').val('');
-                listPattern();
-            }
-            
+                                                    })
+                                                    $('#listPatternTable').html(content);
+                                                    $('#listModal').html(modal);
+                                                    hljs.initHighlighting.called = false;
+                                                    hljs.initHighlighting();
+                                                }
+                                            });
+                                        }
+                                        function reset() {
+                                            $('#courseType').val('');
+                                            $('#courseLevel').val('');
+                                            listPattern();
+                                        }
+
         </script>
     </body>
 </html>

@@ -5,16 +5,13 @@
  */
 package id.hikari.core.repository;
 
-import id.hikari.core.model.QuestionBank;
-import java.util.List;
+import id.hikari.core.model.GeneralSetting;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  *
  * @author admin
  */
-public interface QuestionBankRepository extends JpaRepository<QuestionBank, Long> {
-    public List<QuestionBank> findAllByGenerateId(String generateId);
-    public QuestionBank findDistinctFirstByIdAndGenerateId(Long id, String generateId);
-    
+public interface GeneralSettingRepository extends JpaRepository<GeneralSetting, String>{
+
 }

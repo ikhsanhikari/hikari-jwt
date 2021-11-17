@@ -42,5 +42,20 @@ public class ViewController {
     public ModelAndView generatePattern(Model model) {
         return new ModelAndView("generate_pattern");
     }
+    
+    @RequestMapping({"/exercise"})
+    public ModelAndView exercise(Model model) {
+        return new ModelAndView("exercise");
+    }
+    
+    @RequestMapping({"/general-setting"})
+    public ModelAndView generalSetting(Model model) {
+        return new ModelAndView("general_setting");
+    }
+    
+    @RequestMapping({"/help"})
+    public ModelAndView help(Model model) {
+        return new ModelAndView("help");
+    }
 
 }

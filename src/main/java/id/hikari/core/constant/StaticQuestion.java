@@ -13,19 +13,6 @@ import java.util.Random;
  */
 public class StaticQuestion {
 
-    public static String pattern2code(Random rand) {
-        final int size = 15;
-        String code = "        int a = " + rand.nextInt(size) + ";\n"
-                + "        if (a " + StaticValue.getComparison() + " " + rand.nextInt(size) + ") {\n"
-                + "            " + StaticValue.printLnText(StaticValue.getRandomOutput()) + "\n"
-                + "        } else if (a " + StaticValue.getComparison() + " " + rand.nextInt(size) + " ) {\n"
-                + "            " + StaticValue.printLnText(StaticValue.getRandomOutput()) + "\n"
-                + "        } else {\n"
-                + "            " + StaticValue.printLnText(StaticValue.getRandomOutput()) + "\n"
-                + "        }";
-        return StaticValue.psvm(code);
-    }
-
     public static String pattern1code(Random rand) {
         final int size = 15;
         String code = "         int a = " + rand.nextInt(size) + ";\n"
