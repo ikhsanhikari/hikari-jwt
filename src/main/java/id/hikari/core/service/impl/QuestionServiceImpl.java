@@ -5,11 +5,7 @@
  */
 package id.hikari.core.service.impl;
 
-import id.hikari.core.dto.CompileRequestDTO;
-import id.hikari.core.dto.CourseLevel;
-import id.hikari.core.dto.CourseType;
-import id.hikari.core.dto.ResponseDTO;
-import id.hikari.core.dto.Status;
+import id.hikari.core.dto.*;
 import id.hikari.core.model.GeneralSetting;
 import id.hikari.core.model.QuestionBank;
 import id.hikari.core.model.QuizPatterns;
@@ -20,27 +16,22 @@ import id.hikari.core.service.CompilerService;
 import id.hikari.core.service.QuestionService;
 import id.hikari.core.specification.PatternSpecification;
 import id.hikari.core.utils.GeneralUtil;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Collectors;
+
 /**
- *
  * @author admin
  */
 @Service
@@ -180,5 +171,4 @@ public class QuestionServiceImpl implements QuestionService {
         GeneralSetting setting = generalSettingRepository.findById(code).orElse(null);
         return String.valueOf(setting.getSettingValue());
     }
-;
 }

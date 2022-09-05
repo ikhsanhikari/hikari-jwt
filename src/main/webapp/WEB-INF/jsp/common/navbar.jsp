@@ -20,9 +20,6 @@
                         </ul>
                     </li>
                 </ul>
-                <form class="navbar-search pull-right">
-                    <input type="text" class="search-query" placeholder="Search">
-                </form>
             </div>
         </div>
     </div>
@@ -32,18 +29,13 @@
 <div class="subnavbar">
     <div class="subnavbar-inner">
         <div class="container">
-            <ul class="mainnav" id="mainnav" onclick="handleActivePage(event)">
-                <li ><a href="#" onclick="changePage(this, 'index')"><i class="icon-dashboard"></i><span>Dashboard</span> </a> </li>
-                <li><a href="#" onclick="changePage(this, 'create-pattern')"><i class=" icon-plus-sign-alt"></i><span>Create Pattern</span> </a> </li>
-                <li><a href="#" onclick="changePage(this, 'list-pattern')"><i class="icon-list-alt"></i><span>List Pattern</span> </a> </li>
-                <li><a href="#" onclick="changePage(this, 'generate-pattern')"><i class="icon-print"></i><span>Generate Pattern</span> </a> </li>
-                <li><a href="#" onclick="changePage(this, 'exercise')"><i class="icon-terminal"></i><span>Exercise</span> </a> </li>
+            <ul class="mainnav" id="mainnav" >
             </ul>
         </div>
     </div>
 </div>
 <script>
-    var base_url = '/hikari-jwt'
+    var base_url = '/'
     var token = localStorage.getItem('token');
     
     function fixUrl(obj){
@@ -77,6 +69,18 @@
         }
     }
 
+    function role(param){
+        result = parseJwt(token).auth.filter(function(item){
+            return item.authority == param;
+        });
+        if(result.length >0 ){
+            return true;
+        }
+        return false;
+    }
+    console.log(role('iNSTRUKTUR'));
+
+
     window.onload = function () {
         if (!isActiveToken()) {
             var url =fixUrl(base_url+'/login');
@@ -86,6 +90,20 @@
         var username_profile = document.querySelector('#username_profile');
         var extToken = parseJwt(token);
         username_profile.innerHTML = extToken.sub;
+
+        if(role('MAHASISWA')){
+            document.getElementById('mainnav').innerHTML = `
+                <li id="dashboardMenu"><a href="#" onclick="changePage(this, 'index')"><i class="icon-dashboard"></i><span>Dashboard</span> </a> </li>
+                <li id="exerciseMenu"><a href="#" onclick="changePage(this, 'exercise')"><i class="icon-terminal"></i><span>Exercise</span> </a> </li>
+            `;
+        }else if(role('iNSTRUKTUR')){
+            document.getElementById('mainnav').innerHTML = `
+                 <li id="dashboardMenu"><a href="#" onclick="changePage(this, 'index')"><i class="icon-dashboard"></i><span>Dashboard</span> </a> </li>
+                 <li id="createPatternMenu"><a href="#" onclick="changePage(this, 'create-pattern')"><i class=" icon-plus-sign-alt"></i><span>Create Pattern</span> </a> </li>
+                 <li id="listPatternMenu"><a href="#" onclick="changePage(this, 'list-pattern')"><i class="icon-list-alt"></i><span>List Pattern</span> </a> </li>
+                 <li id="generatePatternMenu"><a href="#" onclick="changePage(this, 'generate-pattern')"><i class="icon-print"></i><span>Generate Pattern</span> </a> </li>
+            `;
+        }
 
     }
 

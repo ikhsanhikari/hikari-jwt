@@ -7,6 +7,7 @@ package id.hikari.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
 
 /**
  *

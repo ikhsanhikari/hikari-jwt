@@ -15,7 +15,7 @@ spring:
     min-idle: 15
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
@@ -23,11 +23,17 @@ spring:
         show-sql: false
         id:
           new_generator_mappings: false
-#logging:
-#  level:
-#     org:
-#       hibernate:
-#         type: trace
+  servlet:
+    multipart:
+      enabled: true
+      # Threshold after which files are written to disk.
+      file-size-threshold: 2KB
+      # Max file size.
+      max-file-size: 200MB
+      # Max Request Size
+      max-request-size: 215MB
+file:
+  upload-dir: \apps\data
 server:
    port: 8080 # This is the default port anyway, but you can change it here
 
