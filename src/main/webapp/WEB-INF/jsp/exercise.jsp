@@ -36,6 +36,13 @@
                                 <h3>Exercise</h3>
                             </div>
                             <div class="widget-content">
+                                <div class="control-group">
+                                    <label class="control-label" for="course">setting latihan</label>
+                                    <div class="controls">
+                                        <select class="span2" id="listLatihan">
+                                        </select>
+                                    </div>
+                                </div>
                                 <button class="btn btn-primary" id="generateExercise"
                                     onclick="generateQuestion()">Generate Exercise</button>
 
@@ -217,6 +224,7 @@
             req = {
                 id: [1, 2]
             }
+            req.settingId=$('#listLatihan').val();
             if (req.id.length > 0) {
                 $.ajax({
                     url: 'pattern/findAllByIdForExercise',
@@ -268,6 +276,29 @@
                 }
             })
             return content;
+        }
+        listLatihan()
+        function listLatihan() {
+            $.ajax({
+                url: '/get_setting_latihan',
+                type: 'GET',
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                success: function (data) {
+                    var listPattern = data.data;
+                    var content = '';
+                    var modal = '';
+                    listPattern.forEach(function (item, index) {
+                        var desc = ``;
+                        content += `<option value="` + item.id + `">` + item.namaLatihan + `</option>`;
+
+
+                    })
+                    $('#listLatihan').html(content);
+                }
+            });
         }
     </script>
     <style>

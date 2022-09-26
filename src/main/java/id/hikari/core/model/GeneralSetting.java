@@ -7,9 +7,8 @@ package id.hikari.core.model;
 
 import id.hikari.core.audit.Auditable;
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.Data;
 
 /**
@@ -21,7 +20,8 @@ import lombok.Data;
 @Table(name = "general_setting")
 public class GeneralSetting extends Auditable<String> implements Serializable {
     @Id
-    private String settingId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long settingId;
     
     private String settingValue;
     

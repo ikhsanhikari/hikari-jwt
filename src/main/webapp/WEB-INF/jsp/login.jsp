@@ -72,7 +72,6 @@
         <div class="login-extra">
             <a href="#">Reset Password</a>
         </div>
-        <!-- /login-extra -->
         <script src="resources/js/jquery-1.7.2.min.js"></script>
         <script src="resources/js/bootstrap.js"></script>
         <script src="resources/js/signin.js"></script>

@@ -12,7 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
  * @author admin
  */
 public enum Role implements GrantedAuthority {
-    MAHASISWA, iNSTRUKTUR, PEMBINA;
+    MAHASISWA, INSTRUKTUR, PEMBINA;
 
     public String getAuthority() {
         return name();

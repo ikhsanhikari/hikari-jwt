@@ -9,9 +9,11 @@ import id.hikari.core.dto.*;
 import id.hikari.core.model.GeneralSetting;
 import id.hikari.core.model.QuestionBank;
 import id.hikari.core.model.QuizPatterns;
+import id.hikari.core.model.SettingLatihan;
 import id.hikari.core.repository.GeneralSettingRepository;
 import id.hikari.core.repository.QuestionBankRepository;
 import id.hikari.core.repository.QuizPatternsRepository;
+import id.hikari.core.repository.SettingLatihanRepository;
 import id.hikari.core.service.CompilerService;
 import id.hikari.core.service.QuestionService;
 import id.hikari.core.specification.PatternSpecification;
@@ -55,6 +57,9 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Autowired
     private GeneralSettingRepository generalSettingRepository;
+
+    @Autowired
+    private SettingLatihanRepository settingLatihanRepository;
 
     private String getOutput(String pattern) throws IOException {
         CompileRequestDTO crdto = new CompileRequestDTO();
@@ -131,11 +136,12 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public ResponseDTO findAllByID(List<Long> id, boolean isExercise) {
+    public ResponseDTO findAllByID(List<Long> id, boolean isExercise, Long settingId) {
         List<QuizPatterns> patternses = new ArrayList<>();
+        Optional<SettingLatihan> byId = settingLatihanRepository.findById(settingId);
+
         if (isExercise) {
-            String listId = getGeneralSetting("exercise_pattern_list");
-            List<String> myList = new ArrayList<String>(Arrays.asList(listId.split(",")));
+            List<String> myList = new ArrayList<>(Arrays.asList(byId.get().getPola().split(",")));
             List<Long> collect = myList.stream()
                     .map(Long::parseLong)
                     .collect(Collectors.toList());
@@ -144,9 +150,9 @@ public class QuestionServiceImpl implements QuestionService {
             patternses = patternsRepository.findAllByID(id);
         }
         List<QuestionBank> newRandom = new ArrayList<>();
-        int count = Integer.parseInt(getGeneralSetting("count_of_generate_pattern"));
+        Integer jumlahSoal = byId.get().getJumlahSoal();
         Long time = new Date().getTime();
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < jumlahSoal; i++) {
             patternses.forEach(
                     (data) -> {
                         StringBuilder sb = new StringBuilder(data.getPattern());

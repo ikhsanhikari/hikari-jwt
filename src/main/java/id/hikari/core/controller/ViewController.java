@@ -55,7 +55,11 @@ public class ViewController {
     
     @RequestMapping({"/help"})
     public ModelAndView help(Model model) {
-        return new ModelAndView("help");
+        return new ModelAndView("guidely");
+    }
+    @RequestMapping({"/buat-latihan"})
+    public ModelAndView buatLatihan(Model model) {
+        return new ModelAndView("buat_latihan");
     }
 
 }

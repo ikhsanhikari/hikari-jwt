@@ -23,21 +23,12 @@
                         <div class="span12">
                             <div class="widget">
                                 <div class="widget-header"> <i class="icon-bookmark"></i>
-                                    <h3>Important Shortcuts</h3>
+                                    <h3>Dashboard</h3>
                                 </div>
                                 <!-- /widget-header -->
                                 <div class="widget-content">
-                                    <div class="shortcuts"> 
-                                        <a href="create-pattern" class="shortcut">
-                                            <i class="shortcut-icon icon-plus"></i>
-                                            <span class="shortcut-label">Create Pattern</span> 
-                                        </a>
-                                        <a href="list-pattern" class="shortcut">
-                                            <i class="shortcut-icon icon-list"></i>
-                                            <span class="shortcut-label">List Pattern</span> 
-                                        </a>
-                                    </div>
-                                    <!-- /shortcuts --> 
+                                    <center><h1>Selamat datang di Hikari-Learning</h1></center><br/>
+                                    <h3>anda login sebagai </h3>
                                 </div>
                                 <!-- /widget-content --> 
                             </div> 

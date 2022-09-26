@@ -8,7 +8,6 @@
                     <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
                                 class="icon-cog"></i> Account <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#" onclick="changePage(this, 'general-setting')">Settings</a></li>
                             <li><a href="#" onclick="changePage(this, 'help')">Help</a></li>
                         </ul>
                     </li>
@@ -78,7 +77,6 @@
         }
         return false;
     }
-    console.log(role('iNSTRUKTUR'));
 
 
     window.onload = function () {
@@ -96,13 +94,19 @@
                 <li id="dashboardMenu"><a href="#" onclick="changePage(this, 'index')"><i class="icon-dashboard"></i><span>Dashboard</span> </a> </li>
                 <li id="exerciseMenu"><a href="#" onclick="changePage(this, 'exercise')"><i class="icon-terminal"></i><span>Exercise</span> </a> </li>
             `;
-        }else if(role('iNSTRUKTUR')){
+        }else if(role('INSTRUKTUR')){
             document.getElementById('mainnav').innerHTML = `
                  <li id="dashboardMenu"><a href="#" onclick="changePage(this, 'index')"><i class="icon-dashboard"></i><span>Dashboard</span> </a> </li>
                  <li id="createPatternMenu"><a href="#" onclick="changePage(this, 'create-pattern')"><i class=" icon-plus-sign-alt"></i><span>Create Pattern</span> </a> </li>
                  <li id="listPatternMenu"><a href="#" onclick="changePage(this, 'list-pattern')"><i class="icon-list-alt"></i><span>List Pattern</span> </a> </li>
                  <li id="generatePatternMenu"><a href="#" onclick="changePage(this, 'generate-pattern')"><i class="icon-print"></i><span>Generate Pattern</span> </a> </li>
+                 <li id="generalSettingMenu"><a href="#" onclick="changePage(this, 'general-setting')"><i class="icon-print"></i><span>General Setting</span> </a> </li>
+                 <li id="buatLatihanMenu"><a href="#" onclick="changePage(this, 'buat-latihan')"><i class="icon-book"></i><span>Buat Latihan</span> </a> </li>
             `;
+        }else if(role('PEMBINA')){
+             document.getElementById('mainnav').innerHTML = `
+                  <li id="dashboardMenu"><a href="#" onclick="changePage(this, 'index')"><i class="icon-dashboard"></i><span>Dashboard</span> </a> </li>
+             `;
         }
 
     }

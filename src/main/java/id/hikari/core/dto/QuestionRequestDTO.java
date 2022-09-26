@@ -19,4 +19,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class QuestionRequestDTO {
     private List<Long> id;
+    private Long settingId;
 }
