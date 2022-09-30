@@ -117,10 +117,10 @@ public class UserController {
         return userService.whoami(req);
     }
  
-    @GetMapping("/refresh")
-//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
-    public String refresh(HttpServletRequest req) {
-        return userService.refresh(req.getRemoteUser());
-    }
+//    @GetMapping("/refresh")
+////    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+//    public String refresh(HttpServletRequest req) {
+//        return userService.refresh(req.getRemoteUser());
+//    }
 
 }

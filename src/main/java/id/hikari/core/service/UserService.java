@@ -50,7 +50,8 @@ public class UserService {
         if (!userRepository.existsByUsername(user.getUsername())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
-            String token = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+//            String token = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+            String token="";
             return new TokenResponseDTO(token,"200","succes signup");
         } else {
             throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
@@ -73,8 +74,8 @@ public class UserService {
         return userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
     }
 
-    public String refresh(String username) {
-        return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles());
-    }
+//    public String refresh(String username) {
+//        return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles());
+//    }
 
 }

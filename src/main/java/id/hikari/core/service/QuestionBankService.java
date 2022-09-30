@@ -15,6 +15,6 @@ import java.util.List;
  */
 public interface QuestionBankService {
     ResponseDTO findByGenerateId(String generateId);
-    public ResponseDTO findByIdAndGenerateId(List<AnswerDTO> listAnswer);
+    public ResponseDTO findByIdAndGenerateId(List<AnswerDTO> listAnswer, Integer settingId);
     
 }

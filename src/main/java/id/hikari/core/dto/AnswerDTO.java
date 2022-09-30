@@ -21,4 +21,5 @@ public class AnswerDTO {
     private Long id;
     private String generateId;
     private String answer;
+    private String username;
 }

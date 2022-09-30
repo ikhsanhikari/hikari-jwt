@@ -5,11 +5,15 @@
  */
 package id.hikari.core.endpoint;
 
+import com.sun.security.auth.UserPrincipal;
 import id.hikari.core.dto.AnswerDTO;
 import id.hikari.core.dto.ResponseDTO;
 import id.hikari.core.service.QuestionBankService;
+
+import java.security.Principal;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,7 +38,8 @@ public class QuestionBankEndPoint {
     }
     
     @PostMapping("/answer")
-    public ResponseDTO findByGenerateIdAndId(@RequestBody List<AnswerDTO> listAnswer){
-        return questionBankService.findByIdAndGenerateId(listAnswer);
+    public ResponseDTO findByGenerateIdAndId(@RequestBody List<AnswerDTO> listAnswer,
+                                             @RequestParam("settingId") Integer settingId){
+        return questionBankService.findByIdAndGenerateId(listAnswer,settingId);
     }
 }

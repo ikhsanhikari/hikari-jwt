@@ -165,17 +165,19 @@
 
 
         function cekAnswer() {
+            console.log(parseJwt(token))
             var reqAnswerAll = []
             idQuestion.forEach(function (item, index) {
                 var reqAnswer = {
                     generateId: generateId,
                     answer: $('#answer' + item).val(),
-                    id: item
+                    id: item,
+                    username : parseJwt(token).sub
                 };
                 reqAnswerAll.push(reqAnswer);
             })
             $.ajax({
-                url: 'bank/answer',
+                url: 'bank/answer?settingId='+$('#listLatihan').val(),
                 type: 'POST',
                 data: JSON.stringify(reqAnswerAll),
                 headers: {

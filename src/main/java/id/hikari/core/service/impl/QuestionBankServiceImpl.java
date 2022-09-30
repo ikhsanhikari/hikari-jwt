@@ -9,24 +9,30 @@ import id.hikari.core.dto.AnswerDTO;
 import id.hikari.core.dto.AnswerResponseDTO;
 import id.hikari.core.dto.ResponseDTO;
 import id.hikari.core.dto.Status;
+import id.hikari.core.model.JawabanLatihanUser;
 import id.hikari.core.model.QuestionBank;
+import id.hikari.core.repository.JawabanLatihanUserRepository;
 import id.hikari.core.repository.QuestionBankRepository;
 import id.hikari.core.service.QuestionBankService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.stream.Collectors;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
  *
  * @author admin
  */
+@RequiredArgsConstructor
 @Service
 public class QuestionBankServiceImpl implements QuestionBankService {
 
-    @Autowired
-    private QuestionBankRepository questionBankRepository;
+    private final QuestionBankRepository questionBankRepository;
+
+    private final JawabanLatihanUserRepository jawabanLatihanUserRepository;
 
     @Override
     public ResponseDTO findByGenerateId(String generateId) {
@@ -36,7 +42,8 @@ public class QuestionBankServiceImpl implements QuestionBankService {
     }
 
     @Override
-    public ResponseDTO findByIdAndGenerateId(List<AnswerDTO> listAnswer) {
+    public ResponseDTO findByIdAndGenerateId(List<AnswerDTO> listAnswer, Integer settingId) {
+        int result = 0;
         List<AnswerResponseDTO> answerResponse = new ArrayList<>();
         for (AnswerDTO answerDTO : listAnswer) {
             QuestionBank questionBank = questionBankRepository.findDistinctFirstByIdAndGenerateId(answerDTO.getId(), answerDTO.getGenerateId());
@@ -46,15 +53,34 @@ public class QuestionBankServiceImpl implements QuestionBankService {
             ardto.setRightAnswer(questionBank.getAnswer());
             if (answerDTO.getAnswer() != null && !answerDTO.getAnswer().isEmpty()  ) {
                 if (answerDTO.getAnswer().trim().equals(questionBank.getAnswer())) {
-                    ardto.setResult("true");
+                    result+=1;
+                    ardto.setResult("right");
                 } else {
-                    ardto.setResult("false");
+                    ardto.setResult("wrong");
                 }
             }else{
                  ardto.setResult("not answered");
             }
             answerResponse.add(ardto);
+            questionBank.setUserAnswer(answerDTO.getAnswer());
+            questionBankRepository.save(questionBank);
         }
+
+        String join = String.join(",", listAnswer.stream().map(item ->
+                "("+item.getId()+". "+item.getAnswer()+")"
+        ).collect(Collectors.toList()));
+
+        jawabanLatihanUserRepository.save(
+                JawabanLatihanUser.builder()
+                        .username(listAnswer.get(0).getUsername())
+                        .answer(join)
+                        .generateId(listAnswer.get(0).getGenerateId())
+                        .result(result)
+                        .totalSoal(listAnswer.size())
+                        .settingId(settingId)
+                        .build()
+        );
+
         return new ResponseDTO(answerResponse, Status.Success);
     }
 

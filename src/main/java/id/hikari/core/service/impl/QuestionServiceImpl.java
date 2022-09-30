@@ -172,9 +172,4 @@ public class QuestionServiceImpl implements QuestionService {
         Collections.shuffle(newRandom);
         return new ResponseDTO(time.toString(), Status.Success);
     }
-
-    private String getGeneralSetting(String code) {
-        GeneralSetting setting = generalSettingRepository.findById(code).orElse(null);
-        return String.valueOf(setting.getSettingValue());
-    }
 }

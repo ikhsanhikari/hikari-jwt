@@ -62,4 +62,9 @@ public class ViewController {
         return new ModelAndView("buat_latihan");
     }
 
+    @RequestMapping({"/hasil_exercise"})
+    public ModelAndView hasilExercise(Model model) {
+        return new ModelAndView("hasil_exercise");
+    }
+
 }

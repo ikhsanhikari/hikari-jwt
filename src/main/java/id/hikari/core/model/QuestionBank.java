@@ -30,6 +30,8 @@ public class QuestionBank extends Auditable<String> implements Serializable {
     private String pattern;
     
     private String answer;
+
+    private String userAnswer;
     
     private String generateId;
     
