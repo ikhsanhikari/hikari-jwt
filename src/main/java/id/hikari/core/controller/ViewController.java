@@ -67,4 +67,9 @@ public class ViewController {
         return new ModelAndView("hasil_exercise");
     }
 
+    @RequestMapping({"/live_coding"})
+    public ModelAndView liveCoding(Model model) {
+        return new ModelAndView("live_coding");
+    }
+
 }

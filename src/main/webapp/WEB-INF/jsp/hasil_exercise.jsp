@@ -141,7 +141,6 @@
 Jawaban Anda    : `+item.userAnswer+`    
 </b></pre></pre> `;
                         })
-                        console.log(content)
                         $('#g'+generateId).html(content);
                     }
                 });

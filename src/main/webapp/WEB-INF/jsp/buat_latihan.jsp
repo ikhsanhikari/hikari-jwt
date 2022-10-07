@@ -15,6 +15,7 @@
     <link href="resources/css/pages/dashboard.css" rel="stylesheet">
     <link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/styles/github.min.css' rel="stylesheet" />
     <script src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/highlight.min.js'></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 
 <body>
@@ -32,11 +33,12 @@
                             <!-- /widget -->
                             <div class="widget-content">
                                 <div class="row">
+                                    <input type="hidden" class="span5" id="idLatihan" />
                                     <div class="span6">
                                         <div class="control-group">
                                             <label class="control-label" for="namaLatihan">Nama Latihan</label>
                                             <div class="controls">
-                                                <input  type="text" class="span5" id="namaLatihan"/>
+                                                <input type="text" class="span5" id="namaLatihan" />
                                             </div>
                                         </div>
                                     </div>
@@ -44,7 +46,7 @@
                                         <div class="control-group">
                                             <label class="control-label" for="jumlahSoal">Jumlah Soal</label>
                                             <div class="controls">
-                                                <input  type="text" class="span5" id="jumlahSoal"/>
+                                                <input type="text" class="span5" id="jumlahSoal" />
                                             </div>
                                         </div>
                                     </div>
@@ -52,15 +54,18 @@
                                         <div class="control-group">
                                             <label class="control-label" for="pola">Pola</label>
                                             <div class="controls">
-                                                <input  type="text" class="span5" id="pola"/>
+                                                <input type="text" class="span5" id="pola" />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="span6">
                                         <div class="control-group">
-                                            <label class="control-label" for="waktu">Waktu</label>
+                                            <label class="control-label" for="status">Status</label>
                                             <div class="controls">
-                                                <input  type="text" class="span5" id="waktu"/>
+                                                <select class="span5" id="status">
+                                                    <option value="1">Active</option>
+                                                    <option value="0">Inactive</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -85,7 +90,8 @@
                                                         <th> Nama Latihan </th>
                                                         <th> Jumlah Soal </th>
                                                         <th> Pola Latihan</th>
-                                                        <th> Waktu</th>
+                                                        <th> Status </th>
+                                                        <th> Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="listPatternTable">
@@ -139,7 +145,7 @@
     <script language="javascript" type="text/javascript" src="resources/js/full-calendar/fullcalendar.min.js"></script>
 
     <script src="resources/js/base.js"></script>
-    <script src="resources/js/sweetalert2.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <script>
 
@@ -164,7 +170,11 @@
                                         <td> ` + item.namaLatihan + ` </td>
                                         <td> ` + item.jumlahSoal + ` </td>
                                         <td> ` + item.pola + ` </td>
-                                        <td> ` + item.waktu + ` </td>
+                                        <td> ` + item.status + ` </td>
+                                        <td class="td-actions">
+                                            <a href="#" onclick="getById(`+ item.id + `)"  class="btn btn-default btn-small"><i class="btn-icon-only icon-gear"> </i></a>
+                                            <a href="#" onclick="deleteById(`+ item.id + `)"  class="btn btn-default btn-small"><i class="btn-icon-only icon-trash"> </i></a>
+                                        </td>
                                     </tr>`;
 
 
@@ -173,16 +183,52 @@
                 }
             });
         }
+
+        
+        function getById(id) {
+            $.ajax({
+                url: '/get_setting_latihan_by_id/' + id,
+                type: 'GET',
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                success: function (data) {
+                    data = data.data
+                    $('#jumlahSoal').val(data.jumlahSoal);
+                    $('#namaLatihan').val(data.namaLatihan);
+                    $('#pola').val(data.pola);
+                    $('#idLatihan').val(id);
+                    $('#status').val(data.status);
+                    $('#btnPreview').css('visibility', 'hidden');
+                }
+            });
+        }
+
+        function deleteById(id) {
+            $.ajax({
+                url: '/delete_setting_latihan_by_id/' + id,
+                type: 'GET',
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                success: function (data) {
+                    listPattern()
+                }
+            });
+        }
+
         function reset() {
             $('#jumlahSoal').val('');
             $('#namaLatihan').val('');
             $('#pola').val('');
-            $('#waktu').val('');
-            $('#result').html('');
+            $('#idLatihan').val('');
+            $('#status').val(1);            
             $('#btnPreview').css('visibility', 'hidden');
             listPattern();
         }
-       
+
         function loadingButton(id, isActive) {
             if (isActive) {
                 $('#' + id).addClass('loading');
@@ -192,34 +238,36 @@
 
             $('#' + id).attr('disabled', isActive);
         }
-        
 
-        function saveLatihan(){  
+
+        function saveLatihan() {
             var namaLatihan = $('#namaLatihan').val();
             var jumlahSoal = $('#jumlahSoal').val();
             var pola = $('#pola').val();
-            var waktu = $('#waktu').val();
-            
+            var status = $('#status').val();
+            var id = $('#idLatihan').val();
+
             req = {};
+            req.id=id;
             req.namaLatihan = namaLatihan;
             req.jumlahSoal = jumlahSoal;
-            req.waktu = waktu;
+            req.status = status;
             req.pola = pola;
             $.ajax({
-                    url: 'save_setting_latihan',
-                    type: 'POST',
-                    data: JSON.stringify(req),
-                    headers: {
-                        'Content-type': 'application/json',
-                        'Authorization': 'Bearer ' + localStorage.getItem('token')
-                    },
-                    success: function (data) {
-                        listPattern();
-                    },
-                    error: function () {
-                        // loadingButton('generateQuestion', false);
-                    }
-                })
+                url: 'save_setting_latihan',
+                type: 'POST',
+                data: JSON.stringify(req),
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                success: function (data) {
+                    swal("Success !", "Berhasil menambah latihan !", "success");
+                    listPattern();
+                },
+                error: function () {
+                }
+            })
         }
     </script>
     <style>

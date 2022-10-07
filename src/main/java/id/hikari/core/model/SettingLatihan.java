@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.eclipse.persistence.annotations.UuidGenerator;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -25,6 +26,6 @@ public class SettingLatihan extends Auditable<String> implements Serializable {
     private String namaLatihan;
     private Integer jumlahSoal;
     private String pola;
-    private String waktu;
+    private Integer status;
 
 }

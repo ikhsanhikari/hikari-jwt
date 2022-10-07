@@ -18,6 +18,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 
@@ -61,15 +63,15 @@ public class CompilerServiceImpl implements CompilerService {
         BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
         String line;
         String output = "";
+        List<String> outputList = new ArrayList<>();
         while (true) {
             line = r.readLine();
             if (line == null) {
                 break;
             }
-//            System.out.println(line);
-            output += line;
+            outputList.add(line);
         }
-        return output;
+        return String.join("\n",outputList);
     }
 
     private void generateJavaFile(CompileRequestDTO crdto, String filename) throws IOException {

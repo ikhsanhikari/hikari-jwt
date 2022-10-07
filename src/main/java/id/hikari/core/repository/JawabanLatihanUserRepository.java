@@ -9,6 +9,7 @@ import id.hikari.core.model.JawabanLatihanUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author admin
@@ -16,4 +17,6 @@ import java.util.List;
 public interface JawabanLatihanUserRepository extends JpaRepository<JawabanLatihanUser, Long> {
 
     List<JawabanLatihanUser> findAllByUsername(String username);
+
+    Optional<JawabanLatihanUser> findByGenerateId(String parseLong);
 }

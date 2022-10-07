@@ -205,6 +205,11 @@
 
                 },
                 error: function () {
+                    Swal.fire(
+                        'Failed!',
+                        'Soal sudah di submit!',
+                        'error'
+                        )
                 }
             })
 

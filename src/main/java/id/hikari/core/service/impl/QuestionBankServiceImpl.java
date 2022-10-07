@@ -52,7 +52,7 @@ public class QuestionBankServiceImpl implements QuestionBankService {
             ardto.setGenerateId(questionBank.getGenerateId());
             ardto.setRightAnswer(questionBank.getAnswer());
             if (answerDTO.getAnswer() != null && !answerDTO.getAnswer().isEmpty()  ) {
-                if (answerDTO.getAnswer().trim().equals(questionBank.getAnswer())) {
+                if (answerDTO.getAnswer().trim().equals(questionBank.getAnswer().trim())) {
                     result+=1;
                     ardto.setResult("right");
                 } else {
@@ -69,7 +69,9 @@ public class QuestionBankServiceImpl implements QuestionBankService {
         String join = String.join(",", listAnswer.stream().map(item ->
                 "("+item.getId()+". "+item.getAnswer()+")"
         ).collect(Collectors.toList()));
-
+        if(jawabanLatihanUserRepository.findByGenerateId(listAnswer.get(0).getGenerateId() ).isPresent()){
+            throw new RuntimeException("sudah di kerjakan");
+        }
         jawabanLatihanUserRepository.save(
                 JawabanLatihanUser.builder()
                         .username(listAnswer.get(0).getUsername())

@@ -94,6 +94,7 @@
                 <li id="dashboardMenu"><a href="#" onclick="changePage(this, 'index')"><i class="icon-dashboard"></i><span>Dashboard</span> </a> </li>
                 <li id="exerciseMenu"><a href="#" onclick="changePage(this, 'exercise')"><i class="icon-terminal"></i><span>Exercise</span> </a> </li>
                 <li id="hasilExercise"><a href="#" onclick="changePage(this, 'hasil_exercise')"><i class="icon-star"></i><span>Hasil Exercise</span> </a> </li>
+                <li id="liveCoding"><a href="#" onclick="changePage(this, 'live_coding')"><i class="icon-code"></i><span>Live Coding</span> </a> </li>
             `;
         }else if(role('INSTRUKTUR')){
             document.getElementById('mainnav').innerHTML = `
